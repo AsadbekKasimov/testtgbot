@@ -10,7 +10,7 @@ let currentCartIndex = null;
 
 // ==================== НАСТРОЙКИ CART API ====================
 // ⚠️ ЗАМЕНИТЕ на реальный URL вашего сервера!
-const CART_API_URL = 'http://ВАШ_СЕРВЕР:8080';
+const CART_API_URL = 'https://semibiologically-consistorian-percy.ngrok-free.dev';
 
 // Fetch products from Google Sheets
 async function fetchProducts() {
