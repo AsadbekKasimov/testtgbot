@@ -150,9 +150,23 @@ let realtimeCartTimer = null;
 let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
 // ==================== CART API — СИНХРОНИЗАЦИЯ С СЕРВЕРОМ ====================
-
 function getTelegramUserId() {
-  return Telegram.WebApp.initDataUnsafe?.user?.id || null;
+    const tg = window.Telegram.WebApp;
+
+    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        return tg.initDataUnsafe.user.id;
+    }
+
+    // fallback если Telegram Web
+    const params = new URLSearchParams(tg.initData);
+    const user = params.get("user");
+
+    if (user) {
+        return JSON.parse(user).id;
+    }
+
+    console.warn("Telegram user_id not found");
+    return null;
 }
 
 /**
