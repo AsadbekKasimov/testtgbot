@@ -14,7 +14,9 @@ const CART_API_URL = 'https://semibiologically-consistorian-percy.ngrok-free.dev
 // Заголовки для ngrok (обходит страницу-предупреждение)
 const CART_API_HEADERS = {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': '1',
 };
+
 
 // Fetch products from Google Sheets
 async function fetchProducts() {
