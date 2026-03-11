@@ -162,6 +162,7 @@ function getTelegramUserId() {
  */
 async function loadCartFromServer() {
     const userId = getTelegramUserId();
+    console.log(`🔄 loadCartFromServer: userId=${userId}, url=${CART_API_URL}`);
     if (!userId) {
         // Нет Telegram userId — используем localStorage
         cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -206,18 +207,23 @@ async function loadCartFromServer() {
  */
 async function saveCartToServer() {
     const userId = getTelegramUserId();
-    if (!userId) return;
+    if (!userId) {
+        console.warn('⚠️ saveCartToServer: no userId!');
+        return;
+    }
 
     if (isSyncingCart) return;
 
     try {
         isSyncingCart = true;
-        await fetch(`${CART_API_URL}/cart`, {
+        console.log(`📤 Sending cart to server: user=${userId}, items=${cart.length}, url=${CART_API_URL}`);
+        const res = await fetch(`${CART_API_URL}/cart`, {
             method: 'POST',
             headers: CART_API_HEADERS,
             body: JSON.stringify({ user_id: userId, cart })
         });
-        console.log(`✅ Cart saved to server: ${cart.length} items`);
+        const data = await res.json();
+        console.log(`✅ Cart saved to server:`, data);
     } catch (e) {
         console.warn('⚠️ Failed to save cart to server:', e.message);
     } finally {
@@ -230,9 +236,10 @@ async function saveCartToServer() {
  */
 async function saveCart() {
     localStorage.setItem('cart', JSON.stringify(cart));
+    console.log(`💾 saveCart called, cart: ${cart.length} items, userId: ${getTelegramUserId()}`);
 
     if (cartSyncTimer) clearTimeout(cartSyncTimer);
-    cartSyncTimer = setTimeout(saveCartToServer, 1200);
+    cartSyncTimer = setTimeout(saveCartToServer, 300);
 }
 
 /**
