@@ -153,7 +153,14 @@ let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 // ==================== CART API — СИНХРОНИЗАЦИЯ С СЕРВЕРОМ ====================
 
 function getTelegramUserId() {
-    return tg.initDataUnsafe?.user?.id || null;
+    const userId = tg.initDataUnsafe?.user?.id;
+
+    if (!userId) {
+        console.warn("Telegram user_id not found");
+        return 945603100; // временно твой id
+    }
+
+    return userId;
 }
 
 /**
