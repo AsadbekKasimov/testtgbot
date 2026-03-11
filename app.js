@@ -177,40 +177,36 @@ function getTelegramUserId() {
  */
 async function loadCartFromServer() {
     const userId = getTelegramUserId();
-    console.log(`🔄 loadCartFromServer: userId=${userId}, url=${CART_API_URL}`);
     if (!userId) {
-        // Нет Telegram userId — используем localStorage
         cart = JSON.parse(localStorage.getItem('cart')) || [];
+        updateCartBadge();
         return;
     }
 
+    // Сначала берём из localStorage — показываем сразу
+    const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (localCart.length > 0) {
+        cart = localCart;
+        updateCartBadge();
+    }
+
+    // Потом пробуем синхронизировать с сервером
     try {
         const res = await fetch(`${CART_API_URL}/cart?user_id=${userId}`, { headers: CART_API_HEADERS });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
         const serverCart = await res.json();
 
         if (Array.isArray(serverCart) && serverCart.length > 0) {
-            // Сервер вернул корзину — используем её
+            // Сервер вернул данные — используем их
             cart = serverCart;
             localStorage.setItem('cart', JSON.stringify(cart));
-            console.log(`✅ Cart loaded from server: ${cart.length} items`);
-        } else {
-            // Сервер вернул пустую корзину — проверяем localStorage
-            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-            if (localCart.length > 0) {
-                // В localStorage есть товары — синхронизируем на сервер
-                cart = localCart;
-                await saveCartToServer();
-                console.log(`📤 Local cart synced to server: ${cart.length} items`);
-            } else {
-                cart = [];
-            }
+        } else if (localCart.length > 0) {
+            // Сервер пустой, но localStorage есть — синхронизируем
+            isSyncingCart = false; // сбрасываем флаг перед вызовом
+            await saveCartToServer();
         }
     } catch (e) {
-        // Сервер недоступен — используем localStorage
-        cart = JSON.parse(localStorage.getItem('cart')) || [];
-        console.warn('⚠️ Cart server unavailable, using localStorage:', e.message);
+        console.warn('⚠️ Server unavailable, using localStorage');
     }
 
     updateCartBadge();
@@ -222,12 +218,10 @@ async function loadCartFromServer() {
  */
 async function saveCartToServer() {
     const userId = getTelegramUserId();
-    if (!userId) {
-        console.warn('⚠️ saveCartToServer: no userId!');
-        return;
-    }
+    if (!userId) return;
 
     if (isSyncingCart) return;
+    isSyncingCart = true; // сразу ставим флаг
 
     try {
         isSyncingCart = true;
