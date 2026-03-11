@@ -14,7 +14,6 @@ const CART_API_URL = 'https://semibiologically-consistorian-percy.ngrok-free.dev
 // Заголовки для ngrok (обходит страницу-предупреждение)
 const CART_API_HEADERS = {
     'Content-Type': 'application/json',
-    'ngrok-skip-browser-warning': 'true'
 };
 
 // Fetch products from Google Sheets
@@ -153,14 +152,7 @@ let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 // ==================== CART API — СИНХРОНИЗАЦИЯ С СЕРВЕРОМ ====================
 
 function getTelegramUserId() {
-    const userId = tg.initDataUnsafe?.user?.id;
-
-    if (!userId) {
-        console.warn("Telegram user_id not found");
-        return 945603100; // временно твой id
-    }
-
-    return userId;
+  return Telegram.WebApp.initDataUnsafe?.user?.id || null;
 }
 
 /**
