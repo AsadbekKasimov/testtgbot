@@ -9,8 +9,13 @@ let modalMode = 'catalog';
 let currentCartIndex = null;
 
 // ==================== НАСТРОЙКИ CART API ====================
-// ⚠️ ЗАМЕНИТЕ на реальный URL вашего сервера!
 const CART_API_URL = 'https://semibiologically-consistorian-percy.ngrok-free.dev';
+
+// Заголовки для ngrok (обходит страницу-предупреждение)
+const CART_API_HEADERS = {
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
+};
 
 // Fetch products from Google Sheets
 async function fetchProducts() {
@@ -164,7 +169,7 @@ async function loadCartFromServer() {
     }
 
     try {
-        const res = await fetch(`${CART_API_URL}/cart?user_id=${userId}`);
+        const res = await fetch(`${CART_API_URL}/cart?user_id=${userId}`, { headers: CART_API_HEADERS });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const serverCart = await res.json();
@@ -209,7 +214,7 @@ async function saveCartToServer() {
         isSyncingCart = true;
         await fetch(`${CART_API_URL}/cart`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: CART_API_HEADERS,
             body: JSON.stringify({ user_id: userId, cart })
         });
         console.log(`✅ Cart saved to server: ${cart.length} items`);
@@ -240,7 +245,7 @@ async function realtimeCartSync() {
     if (isSyncingCart) return;
 
     try {
-        const res = await fetch(`${CART_API_URL}/cart?user_id=${userId}`);
+        const res = await fetch(`${CART_API_URL}/cart?user_id=${userId}`, { headers: CART_API_HEADERS });
         if (!res.ok) return;
 
         const serverCart = await res.json();
