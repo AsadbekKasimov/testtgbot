@@ -9,7 +9,7 @@ let modalMode = 'catalog';
 let currentCartIndex = null;
 
 // ==================== НАСТРОЙКИ CART API ====================
-const CART_API_URL = 'https://semibiologically-consistorian-percy.ngrok-free.dev';
+const CART_API_URL = 'http://192.168.1.100:8080';
 
 // Заголовки для ngrok (обходит страницу-предупреждение)
 const CART_API_HEADERS = {
