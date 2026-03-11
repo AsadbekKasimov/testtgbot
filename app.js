@@ -368,6 +368,8 @@ function setupEventListeners() {
     });
 }
 
+
+
 // ==================== FILTER ====================
 
 function filterProductsInGroups(query) {
