@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Каталог товаров</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+	<div id="loader">
+   <img src="https://asadbekkasimov.github.io/kafolatdillers/images/logo.png" class="loader-logo">
+   <div class="loader-text">Загрузка ...</div>
+	</div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <img src="https://asadbekkasimov.github.io/kafolatdillers/images/logo.png" alt="Logo" class="logo">
+            <h1 class="header-title">Kafolat</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Catalog Page -->
+        <div id="catalog-page" class="page active">
+            <!-- Sticky Search & Groups Container -->
+            <div class="sticky-header">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <input type="text" id="search-input" class="search-input" placeholder="Поиск товаров...">
+                </div>
+
+                <!-- Group Navigation Buttons -->
+                <div class="groups-nav" id="groups-nav">
+                    <!-- Будут добавлены динамически -->
+                </div>
+            </div>
+
+            <!-- Products by Groups -->
+            <div class="products-by-groups" id="products-by-groups">
+                <!-- Группы товаров будут загружены здесь -->
+            </div>
+        </div>
+
+        <!-- Favorites Page -->
+        <div id="favorites-page" class="page">
+            <h2 class="page-title">Избранные товары</h2>
+            <div class="favorites-container">
+                <div class="products-grid" id="favorites-grid">
+                    <div class="empty-state">
+                        <p>У вас пока нет избранных товаров</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       <!-- Cart Page -->
+<div id="cart-page" class="page">
+
+    <!-- Cart Header -->
+    <div class="cart-header">
+        <h2 class="page-title">Корзина</h2>
+
+        <button id="clear-cart-top" class="clear-cart-top">
+            🗑 Очистить корзинку
+        </button>
+    </div>
+
+            <div id="cart-items" class="cart-items">
+                <div class="empty-state">
+                    <p>Ваша корзина пуста</p>
+                </div>
+            </div>
+            <div id="cart-summary" class="cart-summary hidden">
+                <div class="cart-total">
+                    <span>Итого:</span>
+                    <span id="cart-total-amount">0 сум</span>
+                </div>
+		<button class="checkout-btn" id="checkout-btn">Оформить заказ</button>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile-page" class="page">
+            <h2 class="page-title">Профиль</h2>
+            <div class="profile-content">
+                <div class="profile-info">
+                    <div class="profile-item">
+                        <span class="profile-label">Имя:</span>
+                        <span class="profile-value" id="user-name">Загрузка...</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Телефон:</span>
+                        <span class="profile-value" id="user-phone">Загрузка...</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Город:</span>
+                        <span class="profile-value" id="user-city">Загрузка...</span>
+                    </div>
+                </div>
+                <div class="profile-orders">
+                    <h3>Последние заказы</h3>
+                    <div id="orders-list" class="orders-list">
+                        <p class="empty-state">У вас пока нет заказов</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" data-page="catalog">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Каталог</span>
+        </button>
+        <button class="nav-btn" data-page="favorites">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span>Избранные</span>
+        </button>
+        <button class="nav-btn" data-page="cart">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span>Корзина</span>
+            <span class="cart-badge hidden" id="cart-badge">0</span>
+        </button>
+        <button class="nav-btn" data-page="profile">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Профиль</span>
+        </button>
+    </nav>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div class="modal-body">
+               
+ 	<div class="slider modal-slider" id="modal-slider" data-index="0">
+  	  <div class="slides" id="modal-slides"></div>
+  	  <div class="dots" id="modal-dots"></div>
+		</div>
+
+                <h3 id="modal-title"></h3>
+                <p id="modal-description"></p>
+                <div class="modal-price" id="modal-price"></div>
+                <div class="modal-quantity">
+                    <button class="qty-btn" id="qty-minus">-</button>
+                  
+					<input
+ 					 type="number"
+	  				 id="qty-input"
+ 					 value=""
+ 					 min=""
+  					 step=""
+  					 inputmode="numeric"
+					   
+					/>
+
+                    <button class="qty-btn" id="qty-plus">+</button>
+                </div>
+                <button class="add-to-cart-btn" id="modal-add-to-cart">Добавить в корзину</button>
+            </div>
+        </div>
+    </div>
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal hidden">
+        <div class="modal-content confirmation-modal-content">
+            <div class="confirmation-body">
+                <svg class="confirmation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <h3 class="confirmation-title">Вы уверены?</h3>
+                <p class="confirmation-text">После оформления заказа изменить его будет невозможно. Проверьте правильность выбранных товаров.</p>
+                <div class="confirmation-buttons">
+                    <button class="confirmation-btn cancel-btn" onclick="closeConfirmationDialog()">Отмена</button>
+                    <button class="confirmation-btn confirm-btn" onclick="confirmCheckout()">Подтвердить заказ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
