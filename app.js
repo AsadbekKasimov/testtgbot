@@ -1,3 +1,5 @@
+const API_URL = "https://semibiologically-consistorian-percy.ngrok-free.dev";
+
 // ==================== ГРУППОВОЙ КАТАЛОГ С SCROLL SPY ====================
 
 
