@@ -301,9 +301,7 @@ function setupEventListeners() {
                 return;
             }
 
-            if (modalMode === 'cart' && currentCartIndex !== null) {
-                cart[currentCartIndex].quantity = qty;
-                localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
                 renderCart();
                 closeModal();
             }
@@ -695,7 +693,7 @@ async function realtimeCartSync(){
 
         cart = cloudCart;
 
-        localStorage.setItem(`cart_${tg.initDataUnsafe.user.id}`, JSON.stringify(cart));
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
 
         updateCartBadge();
 
@@ -956,6 +954,12 @@ document.addEventListener('click', e => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // 🔐 ПРОВЕРКА TELEGRAM USER
+    if (!tg.initDataUnsafe?.user) {
+        alert("Открой через Telegram");
+        return;
+    
     fetchProducts();
     setupEventListeners();
     updateCartBadge();
